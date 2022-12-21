@@ -1,4 +1,4 @@
-# import time
+import time
 import requests
 import gomoku
 
@@ -50,6 +50,7 @@ class gomoku_ai_random_webclient:
         # print(time_spent_ns)
 
         # json kent geen tuples. Die maakt er arrays van. Dus zelf even converteren naar een tuple.
+
         return tuple(req.json()["move"])
 
     def id(self):

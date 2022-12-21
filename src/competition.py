@@ -4,6 +4,9 @@ import gomoku
 from random_agent import random_dummy_player
 from gomoku_ai_marius1_webclient import gomoku_ai_marius1_webclient
 from gomoku_ai_random_webclient import gomoku_ai_random_webclient
+
+from champion import Champion
+
 import random
 import time
 
@@ -119,10 +122,12 @@ game = gomoku.starting_state()
 player0 = random_dummy_player()
 player1 = gomoku_ai_marius1_webclient()
 player2 = gomoku_ai_random_webclient()
+player3 = Champion()
 
 comp = Competition()
 comp.register_player(player1)
 comp.register_player(player2)
+# comp.register_player(player3)
 
 nofCompetitions = 1
 for i in range(nofCompetitions):

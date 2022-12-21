@@ -2,6 +2,7 @@
 import requests
 import gomoku
 
+import time
 # heuristicalmontecarloplayer_webClient calls the web-based webserver
 # via a python flask application.
 class gomoku_ai_marius1_webclient:
@@ -38,19 +39,21 @@ class gomoku_ai_marius1_webclient:
         dic["black"] = self.black
 
         # measure the time spent
-        # start_time_ns = time.time_ns()
+        start_time_ns = time.time_ns()
 
         # call the server using POST.
         url = "https://themave.pythonanywhere.com/make_gomoku_move/ai_marius1"
         req = requests.post(url, json=dic)
 
-        # print(req.json())
-
-        # time_spent_ns =  time.time_ns()-start_time_ns
-        # print(time_spent_ns)
+        print(req.json())
+        time_spent_ns =  time.time_ns()-start_time_ns
+        print(time_spent_ns)
 
         # json kent geen tuples. Die maakt er arrays van. Dus zelf even converteren naar een tuple.
+        
         return tuple(req.json()["move"])
+
+
 
     def id(self):
         return "Marius"
