@@ -7,7 +7,7 @@ from node import Node
 import time
 import copy
 
-# This default base player does a randomn move
+
 class Champion:
 
     def __init__(self, color_: bool = True): 
@@ -64,7 +64,7 @@ class Champion:
         
             
  
-    def rollout(self, node: Node):
+    def rollout(self, node: Node) -> float:
         """
         This function is used to simulate a random game from the current state of the game.
         It is used to estimate the value of a node.
@@ -171,5 +171,4 @@ class Champion:
             
              
     def id(self) -> str:
-        """Please return a string here that uniquely identifies your submission e.g., "name (student_id)" """
-        return "Champion player Matthijs Koelewijn "
+        return "Champion player Matthijs Koelewijn (1716853) "

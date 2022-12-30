@@ -12,10 +12,14 @@ class Node:
         self.Q = 0                      # A number of accrued points
         self.player_id = 1 if (self.state[1] % 2 == 0) else 2 
 
-    def calculate_uct_value(self):
+    def calculate_uct_value(self) -> float:
         """
+        Calculates the UCT value for a node.
+
+        :param self: The node to calculate the UCT value for.
+        :return: The UCT value for the node.
+        
         Runtime complexity of O(1) because only 1 operation is executed. This doesn't vary.
-        :return: the uct value of a node.
         """
         return (self.Q / self.N) + (
                 2 / math.sqrt(2) * math.sqrt(math.log(self.parent_node.N, 2) / self.N))
@@ -23,9 +27,12 @@ class Node:
 
     def best_child(self):
         """
-        Find the best child in the tree
+        This function returns the best child node of the current node.
+        The best child node is the one with the highest UCT value.
+        
+        :return: The child with highest UCT value.
+
         Runtime-complexity of O(n) because you only loop though all children once.
-        :return: the child with highest value.
         """
         value = 0
         child = self.child_nodes[0]
@@ -40,9 +47,13 @@ class Node:
 
     def best_move(self) -> tuple:
         """
+        This function returns the best move for the current player.
+        The best move is the move that has the highest Q/N value.
+
+        :return: Tuple with the best move for the current player.
+        
         Worst-case the runtime complexity will be O(n) because we need to loop over all the children.
         So the more children a node has, the longer this function will run. Therefore a complexity of O(n)
-        :return: Tuple: returns the last move of the best child
         """
         highest_value = self.child_nodes[0].Q / self.child_nodes[0].N
         best_child = self.child_nodes[0]
