@@ -119,10 +119,11 @@ class Competition:
 # When the students submit a player file, they should be entered one by one.
 game = gomoku.starting_state()
 
-player0 = random_dummy_player()
-player1 = gomoku_ai_marius1_webclient()
+# player0 = random_dummy_player()
+player3 = gomoku_ai_marius1_webclient()
+player1 = Champion()
 player2 = gomoku_ai_random_webclient()
-player3 = Champion()
+
 
 comp = Competition()
 comp.register_player(player1)
