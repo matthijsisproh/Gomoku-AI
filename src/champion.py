@@ -19,12 +19,25 @@ class Champion:
         """At the start of each new game you will be notified by the competition.
         this method has a boolean parameter that informs your agent whether you
         will play black or white.
+
+        :param color_: player color black or white
         """
         self.color = color_
         self.previous_tree_root = None
 
 
     def find_spot_to_expand(self, node :Node):
+        """
+        This function is used to find the next node to expand.
+        It is called recurisvely until a node is found that has not been expanded.
+        
+        The node is found by traversing the tree from the root node to the best child node.
+        The best child node is the node with the highest UCT value.
+                
+        :param node: The node tree with all the game information stored in it.
+        
+        :return node: A node that is to be expanded.
+        """
                    
         if(GmUtils.isWinningMove(node.last_move, node.state[0]) or len(node.valid_moves) == 0): # Return node if game is finished
             return node
@@ -51,7 +64,16 @@ class Champion:
         
             
  
-    def rollout(self, node):
+    def rollout(self, node: Node):
+        """
+        This function is used to simulate a random game from the current state of the game.
+        It is used to estimate the value of a node.
+        
+        :param node: The leaf node that was most recently visited.
+        
+        :return value: It returns 1 if the current player wins, 0 if the current player loses, and 0.5 if the game is a draw.
+        """
+
         if(node.parent_node is not None):
             while(True):
                 valid_moves = GmUtils.getValidMoves(node.state[0], node.state[1])
@@ -73,7 +95,20 @@ class Champion:
             
 
 
-    def backup_value(self, node, value):
+    def backup_value(self, node: Node, value: float):
+        """
+        This function is used to backup the value of a node in the tree.
+        It is called after a simulation is run from the root to a leaf, and the value of the
+        leaf node is known(see the 'move' function for more details on how values are
+        assigned to leaf nodes). This value is propagated up the tree to the root, updating
+        the "N" and "Q" values of each node along the path.
+        N's are amount of visits to the node and Q's a number of accrued points.
+
+        :param node: The leaf node that was most recently visited.
+        :param value: The value of the leaf node that was most recently visited. 
+        The value of a node is the value of the node's children determined by a
+        win(1), draw(0.5) or loss(0)        
+        """
         while node is not None:
             node.N += 1
             
@@ -135,9 +170,6 @@ class Champion:
             return root_node.best_move()
             
              
-
-
-
     def id(self) -> str:
         """Please return a string here that uniquely identifies your submission e.g., "name (student_id)" """
         return "Champion player Matthijs Koelewijn "
