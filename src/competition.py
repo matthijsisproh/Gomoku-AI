@@ -124,11 +124,11 @@ player3 = gomoku_ai_marius1_webclient()
 player1 = Champion()
 player2 = gomoku_ai_random_webclient()
 
-
 comp = Competition()
 comp.register_player(player1)
-comp.register_player(player2)
-# comp.register_player(player3)
+# comp.register_player(player2)
+comp.register_player(player3)
+
 
 nofCompetitions = 1
 for i in range(nofCompetitions):

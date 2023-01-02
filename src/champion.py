@@ -1,6 +1,8 @@
 import random
-from gomoku import Move, GameState, check_win, move, pretty_board
+from gomoku import SIZE, Move, GameState, check_win, move, pretty_board
 from GmUtils import GmUtils
+import gomoku
+
 
 from node import Node
 
@@ -10,10 +12,13 @@ import copy
 
 class Champion:
 
-    def __init__(self, color_: bool = True): 
+    def __init__(self, color_: bool = True, boardSize_=gomoku.SIZE): 
         """Constructor for the player."""
-        self.color = color_     #True is black, False if white
+        self.black = color_     #True is black, False if white
         self.state = None
+        self.average = [0, 0] 
+        self.count = 0
+        self.boardSize = boardSize_
 
     def new_game(self, color_: bool):
         """At the start of each new game you will be notified by the competition.
@@ -22,8 +27,36 @@ class Champion:
 
         :param color_: player color black or white
         """
-        self.color = color_
+        self.black = color_
         self.previous_tree_root = None
+        self.average = [0, 0] 
+        self.count = 0
+
+    def strategy(self, valid_moves):
+        """
+        This function takes in a list of moves and returns the move that is 
+        closest to the average of the moves.
+        The average is calculated by taking the sum of the x and y coordinates 
+        of all the moves and dividing by the number of moves.
+        The move that is closest to the average is the move that has the 
+        smallest difference between the x and y coordinates of the move and 
+        the average.
+        
+        :param valid_moves: List of all valid moves
+
+        :return win_move: The move that is closest to the average.
+        """
+        if self.state[1] % 3 == 0:
+            win_move = valid_moves[0]
+
+        else:
+            win_move = valid_moves[-1]
+        # win_move = valid_moves[0]
+        for move in valid_moves:
+            if abs(move[0] - self.average[0]) < abs(win_move[0] - self.average[0]) and abs(move[1] - self.average[1]) < abs(win_move[1] - self.average[1]):
+                win_move = move
+
+        return win_move
 
 
     def find_spot_to_expand(self, node :Node):
@@ -47,11 +80,11 @@ class Champion:
 
         elif len(node.valid_moves) > len(node.child_nodes):
             valid_moves = node.valid_moves
-            new_move = valid_moves[0]
+            new_move = self.strategy(valid_moves)
             move_isvalid, winning_move, new_state = move(copy.deepcopy(node.state), new_move)
             valid_moves.remove(new_move)
             child_node = Node(
-                            self.color, 
+                            self.black, 
                             new_state, 
                             new_move, 
                             parent_node=node, 
@@ -78,7 +111,8 @@ class Champion:
             while(True):
                 valid_moves = GmUtils.getValidMoves(node.state[0], node.state[1])
                 node.last_move = random.choice(valid_moves)
-                move(node.state, node.last_move)
+                copied_state = copy.deepcopy(node.state)
+                move(copied_state, node.last_move)
                 node.valid_moves = GmUtils.getValidMoves(node.state[0], node.state[1])
                 if(GmUtils.isWinningMove(node.last_move, node.state[0]) or len(GmUtils.getValidMoves(node.state[0], node.state[1])) == 0):
                     break
@@ -86,7 +120,7 @@ class Champion:
             return None
 
         if(GmUtils.isWinningMove(node.last_move, node.state[0])):
-            if(node.player_id == self.color):
+            if(node.player_id == self.black):
                 return 1 #Win
             else:
                 return 0 #Lose
@@ -122,8 +156,11 @@ class Champion:
 
 
     def move(
-        self, state: GameState, last_move: Move, max_time_to_move: int = 1000
-    ) -> Move:
+        self, 
+        state: GameState, 
+        last_move: Move, 
+        max_time_to_move: int = 1000
+        ) -> Move:
         """
         This function is called by the game engine to request a move from the player.
         The game engine will call this function repeatedly until the game is over.
@@ -135,18 +172,15 @@ class Champion:
         
         :return: Move object with the move that the player wants to make.
         """
-    
-        
+            
         self.state = state
         self.our_last_played_move = None
-        
-        pretty_board(state[0])
 
         current_time = time.time_ns() # Get current time
         end_time = current_time + max_time_to_move # Time in milliseconds
         valid_move_list = GmUtils.getValidMoves(state[0], state[1])
         root_node = Node(                   
-                    color=self.color, 
+                    color=self.black, 
                     state=state, 
                     last_move=last_move, 
                     parent_node=self.previous_tree_root, 
@@ -154,9 +188,13 @@ class Champion:
                     )
 
         if state[1] == 1:   # First move must be 9,9 to initialize the game.
-            return (9,9)
+            return (round(SIZE/2), round(SIZE/2))
         
         else:
+            self.average[0] = ((self.average[0]) * self.count + last_move[0]) / (self.count + 1)
+            self.average[1] = ((self.average[0]) * self.count + last_move[1]) / (self.count + 1)
+            self.count += 1
+
             while(current_time < end_time):     # Time must not exceed time limit
                 leaf_node = self.find_spot_to_expand(root_node) 
                 value = self.rollout(leaf_node) 

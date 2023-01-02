@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 
 # Gomoku Test Environment versie 1.6
 # (by Marius Versteegen)
@@ -114,6 +114,7 @@ from gomoku_ai_random_webclient import gomoku_ai_random_webclient
 from basePlayer import basePlayer
 from GmGame import GmGame
 from GmQuickTests import GmQuickTests
+from champion import Champion
 
 # player gives an implementation the basePlayer cl
 class randomPlayer(basePlayer):
@@ -195,6 +196,9 @@ random.seed(0)  # voor reproduceerbare debugging
 humanPlayer1 = humanPlayer()
 humanPlayer2 = humanPlayer()
 
+
+champ_player = Champion()
+
 aiPlayer1 = randomPlayer()
 aiPlayer2 = gomoku_ai_marius1_webclient(
     True, GmGameRules.winningSeries, GmGameRules.BOARDWIDTH
@@ -205,8 +209,8 @@ aiPlayer3 = gomoku_ai_random_webclient(
 
 # uncomment the line below to test again yourself as human (player1 is black and starts the game)
 GmGame.start(
-    player1=aiPlayer2,
-    player2=humanPlayer1,
+    player1=champ_player,
+    player2=aiPlayer2,
     max_time_to_move=1000,
     showIntermediateMoves=True,
 )  # don't speciry an aiPlayer for Human vs Human games
