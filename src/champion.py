@@ -12,20 +12,21 @@ import copy
 
 class Champion:
 
-    def __init__(self, color_: bool = True, boardSize_=gomoku.SIZE): 
+    def __init__(self, color_: bool = True): 
         """Constructor for the player."""
         self.black = color_     #True is black, False if white
         self.state = None
         self.average = [0, 0] 
         self.count = 0
-        self.boardSize = boardSize_
-
+   
     def new_game(self, color_: bool):
         """At the start of each new game you will be notified by the competition.
         this method has a boolean parameter that informs your agent whether you
         will play black or white.
 
         :param color_: player color black or white
+
+        Runtime complexity: O(1), all executed once
         """
         self.black = color_
         self.previous_tree_root = None
@@ -45,6 +46,8 @@ class Champion:
         :param valid_moves: List of all valid moves
 
         :return win_move: The move that is closest to the average.
+
+        Runtime complexity: O(n), loops over all moves
         """
         if self.state[1] % 3 == 0:
             win_move = valid_moves[0]
@@ -70,6 +73,8 @@ class Champion:
         :param node: The node tree with all the game information stored in it.
         
         :return node: A node that is to be expanded.
+
+        Runtime complexity: O(n) Its recursive, and calls multiple functions
         """
                    
         if(GmUtils.isWinningMove(node.last_move, node.state[0]) or len(node.valid_moves) == 0): # Return node if game is finished
@@ -105,6 +110,8 @@ class Champion:
         :param node: The leaf node that was most recently visited.
         
         :return value: It returns 1 if the current player wins, 0 if the current player loses, and 0.5 if the game is a draw.
+
+        Runtime complexity: O(n), this function rolls out random moves untill the game is won or there are no moves left
         """
 
         if(node.parent_node is not None):
@@ -142,6 +149,8 @@ class Champion:
         :param value: The value of the leaf node that was most recently visited. 
         The value of a node is the value of the node's children determined by a
         win(1), draw(0.5) or loss(0)        
+
+        Runtime complexity: O(n), loops over all nodes
         """
         while node is not None:
             node.N += 1
@@ -171,6 +180,8 @@ class Champion:
         is allowed to take to make a move.
         
         :return: Move object with the move that the player wants to make.
+
+        Runtime complexity: O(n), loops untill there is no more time left.
         """
             
         self.state = state
@@ -204,7 +215,6 @@ class Champion:
             
             self.our_last_played_move = root_node.best_move()
             self.previous_tree_root = root_node
-            print(root_node.best_move())
             return root_node.best_move()
             
              

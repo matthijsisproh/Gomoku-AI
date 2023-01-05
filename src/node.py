@@ -19,7 +19,7 @@ class Node:
         :param self: The node to calculate the UCT value for.
         :return: The UCT value for the node.
         
-        Runtime complexity of O(1) because only 1 operation is executed. This doesn't vary.
+        Runtime complexity: O(1), Only 1 operation is executed.
         """
         return (self.Q / self.N) + (
                 2 / math.sqrt(2) * math.sqrt(math.log(self.parent_node.N, 2) / self.N))
@@ -32,7 +32,7 @@ class Node:
         
         :return: The child with highest UCT value.
 
-        Runtime-complexity of O(n) because you only loop though all children once.
+        Runtime complexity: O(n), Only loop through all children
         """
         value = 0
         child = self.child_nodes[0]
@@ -52,8 +52,7 @@ class Node:
 
         :return: Tuple with the best move for the current player.
         
-        Worst-case the runtime complexity will be O(n) because we need to loop over all the children.
-        So the more children a node has, the longer this function will run. Therefore a complexity of O(n)
+        Runtime complexity: O(n), Only loop through all children
         """
         highest_value = self.child_nodes[0].Q / self.child_nodes[0].N
         best_child = self.child_nodes[0]
