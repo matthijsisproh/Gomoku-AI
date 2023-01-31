@@ -187,8 +187,9 @@ class Champion:
         self.state = state
         self.our_last_played_move = None
 
-        current_time = time.time_ns() # Get current time
-        end_time = current_time + max_time_to_move # Time in milliseconds
+        start_time = time.time_ns()
+        end_time = time.time_ns() - start_time < max_time_to_move * 100000
+
         valid_move_list = GmUtils.getValidMoves(state[0], state[1])
         root_node = Node(                   
                     color=self.black, 
@@ -206,12 +207,12 @@ class Champion:
             self.average[1] = ((self.average[0]) * self.count + last_move[1]) / (self.count + 1)
             self.count += 1
 
-            while(current_time < end_time):     # Time must not exceed time limit
+            while(end_time):     # Time must not exceed time limit
                 leaf_node = self.find_spot_to_expand(root_node) 
                 value = self.rollout(leaf_node) 
                 self.backup_value(leaf_node, value)
 
-                current_time = time.time_ns() # Update current time
+                end_time = time.time_ns() - start_time < max_time_to_move * 100000
             
             self.our_last_played_move = root_node.best_move()
             self.previous_tree_root = root_node
