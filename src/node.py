@@ -12,6 +12,7 @@ class Node:
         self.Q = 0                      # A number of accrued points
         self.player_id = 1 if (self.state[1] % 2 == 0) else 2 
 
+
     def calculate_uct_value(self) -> float:
         """
         Calculates the UCT value for a node.
@@ -21,8 +22,8 @@ class Node:
         
         Runtime complexity: O(1), Only 1 operation is executed.
         """
-        return (self.Q / self.N) + (
-                2 / math.sqrt(2) * math.sqrt(math.log(self.parent_node.N, 2) / self.N))
+        return (self.Q / self.N) + (2 / math.sqrt(2) * math.sqrt(math.log(self.parent_node.N, 2) / self.N))
+
     
 
     def best_child(self):
