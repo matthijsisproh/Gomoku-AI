@@ -1,9 +1,10 @@
-import random
 import gomoku
+from gomoku import Board, Move, GameState, check_win, valid_moves
+
+import random
 import copy
 import math
 import time
-from gomoku import Board, Move, GameState, valid_moves, check_win, SIZE
 
 class Node():
     def __init__(self, state, parent_node = None, last_move = None, valid_moves = None):
