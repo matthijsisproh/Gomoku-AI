@@ -223,8 +223,9 @@ class ChampionV2:
 
         while (((time.time_ns() - start_time) / 1000000) < max_time_to_move):
             leaf_node = self.find_spot_to_expand(root_node)
-            value = self.rollout(leaf_node)
-            self.backup_value(value, leaf_node)
+            for i in range(10):
+                value = self.rollout(leaf_node)
+                self.backup_value(value, leaf_node)
 
         return root_node.best_move()
 
